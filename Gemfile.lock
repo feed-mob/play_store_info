@@ -3,7 +3,7 @@ PATH
   specs:
     play_store_info (1.0.3)
       metainspector (~> 5.1.1)
-      sanitize (~> 4.0.1)
+      sanitize (~> 6.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -49,7 +49,7 @@ GEM
     nesty (1.0.2)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    nokogumbo (1.4.13)
+    nokogumbo (2.0.5)
       nokogiri
     parser (2.3.0.7)
       ast (~> 2.2)
@@ -82,10 +82,10 @@ GEM
     rubocop-rspec (1.4.0)
     ruby-progressbar (1.7.5)
     safe_yaml (1.0.4)
-    sanitize (4.0.1)
+    sanitize (6.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
-      nokogumbo (~> 1.4.1)
+      nokogumbo (~> 2.0.5)
     slop (3.6.0)
     unf (0.1.4)
       unf_ext
