@@ -27,7 +27,7 @@ module PlayStoreInfo
       raise AppNotFound if name.empty?
 
       # get the app proper name in case the title contains some description
-      name.split(' - ').first.strip
+      name
     end
 
     def read_artwork
