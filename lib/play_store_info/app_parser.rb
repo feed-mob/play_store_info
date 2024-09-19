@@ -22,9 +22,9 @@ module PlayStoreInfo
     end
 
     def read_name
-      name = @body.xpath('//h1[@itemprop="name"]').text
+      name = @body.xpath('//h1//span[@itemprop="name"]').text
 
-      raise AppNotFound if name.empty?
+      raise ParsingError if name.empty?
 
       # get the app proper name in case the title contains some description
       name
@@ -38,31 +38,31 @@ module PlayStoreInfo
     end
 
     def read_description
-      description = @body.xpath('//div[@itemprop="description"]').first&.inner_html&.strip
+      description = @body.xpath('//div[@data-g-id="description"]').first&.inner_html&.strip
 
       description.nil? ? '' : Sanitize.fragment(description).strip
     end
 
     def read_current_rating
-      current_rating = @body.xpath('//meta[@itemprop="ratingValue/@content"]').first&.value&.strip || ''
+      current_rating = parsed_json.dig('aggregateRating', 'ratingValue')
       current_rating.nil? ? '' : current_rating.strip
     end
 
     def read_rating_count
-      rating_count = @body.xpath('//meta[@itemprop="ratingCount/@content"]').first&.value&.strip || ''
+      rating_count = parsed_json.dig('aggregateRating', 'ratingCount')
       rating_count.nil? ? '' : rating_count.split(",").join().strip
     end
 
     def read_genre_names
       genre_names = []
-      @body.xpath('//a[@itemprop="genre"]').each do |tag|
+      @body.xpath('//div[@itemprop="genre"]').each do |tag|
         genre_names << tag.text
       end
       genre_names
     end
 
     def read_url
-      url = @body.xpath('//a[@class="dev-link"]/@href').first&.value&.strip || ''
+      url = parsed_json.dig('url')
       url.match(%r{^https?:\/\/}).nil? ? "http://#{url.gsub(%r{\A\/\/}, '')}" : url
     end
 
@@ -72,8 +72,15 @@ module PlayStoreInfo
     end
 
     def read_author
-      author = @body.xpath('//div[contains(text(), "Offered By")]/following-sibling::div').text()
+      author = parsed_json.dig('author', 'name')
       author.nil? ? '' : author.strip
+    end
+
+    def parsed_json
+      @parsed_json ||= begin
+        json_content = @body.xpath('//script[@type="application/ld+json"]').text
+        JSON.parse(json_content)
+      end
     end
 
   end

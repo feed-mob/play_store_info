@@ -15,6 +15,12 @@ module PlayStoreInfo
     end
   end
 
+  class ParsingError < GenericError
+    def initialize
+      super 'Could not parse the app information'
+    end
+  end
+
   class ConnectionError < GenericError
     def initialize
       super 'Could not retrieve your app information at the moment. Please try again later.'
